@@ -11,25 +11,31 @@ class App extends Component {
     };
   }
 
+  // React Lifecycle methods
+  componentDidMount = () => {
+    this.initializeWebGL();
+  }
+  // END - React Lifecycle methods
+
+
+  // WebGL related methods
   createShader(type, source) {
     let shader = this.gl.createShader(type);
     this.gl.shaderSource(shader, source);
     this.gl.compileShader(shader);
     let success = this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS);
     if(success) {
-      return shader;
+      this.shader = shader;
     }
 
     console.log(this.gl.getShaderInfoLog(shader));
     this.gl.deleteShader(shader);
   }
 
-
-  componentDidMount = () => {
-    console.log('component did mount.');
+  initializeWebGL = () => {
     this.myCanvas = this.refs.myCanvas;
     this.gl = this.myCanvas.getContext('webgl');
-
+    this.createShader();    
     this.setState({ webGLInstalled: this.gl ? true : false });
   }
 
@@ -51,5 +57,7 @@ class App extends Component {
     );
   }
 }
+
+
 
 export default App;
